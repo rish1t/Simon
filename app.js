@@ -2,19 +2,19 @@ let gameSeq = [];
 let userSeq = [];
 
 let Highscore = 0;
-let btns = ["yellow","red","purple","green"];
+let btns = ["yellow", "red", "purple", "green"];
 
 let started = false;
 let playing = false;
+let resetting = false; 
 let level = 0;
 
 let h2 = document.querySelector("h2");
 
-document.addEventListener("click", function(){
-    if(started == false){
+document.addEventListener("click", function () {
+    if (started == false) {
         console.log("Game has started");
         started = true;
-
         levelUp();
     }
 });
@@ -36,11 +36,11 @@ function btnFlash(btn) {
     btn.classList.add("flash");
     setTimeout(function () {
         btn.classList.remove("flash");
-    },250);
+    }, 250);
 }
 
 function btnPress() {
-    if (!started || playing == true){
+    if (!started || playing || resetting) {
         return;
     }
     let btn = this;
@@ -49,30 +49,30 @@ function btnPress() {
     userColor = btn.getAttribute("id");
     console.log(userColor);
     userSeq.push(userColor);
-    checkAns(userSeq.length-1);
-
+    checkAns(userSeq.length - 1);
 }
 
-function checkAns(idx){
-    if(userSeq[idx] === gameSeq[idx]){
-        if(userSeq.length == gameSeq.length){
-            if(level >= Highscore){ 
+function checkAns(idx) {
+    if (userSeq[idx] === gameSeq[idx]) {
+        if (userSeq.length == gameSeq.length) {
+            if (level >= Highscore) {
                 Highscore = level;
-                document.querySelector("h3").innerHTML = `Highscore : ${Highscore}`; 
+                document.querySelector("h3").innerHTML = `Highscore : ${Highscore}`;
             }
             setTimeout(function () {
                 levelUp();
-            },1000);
+            }, 1000);
         }
     } else {
-        h2.innerHTML = `Game Over! Your Score was : <b>${level-1}</b><br> Click anywhere to Restart`;
+        h2.innerHTML = `Game Over! Your Score was : <b>${level - 1}</b><br> Click anywhere to Restart`;
         document.querySelector("body").style.backgroundColor = "red";
-        setTimeout( function(){
-            document.querySelector("body").style.backgroundColor =  `rgb(25, 25, 25)`;
-        },150);
+        resetting = true; 
+        setTimeout(function () {
+            document.querySelector("body").style.backgroundColor = `rgb(25, 25, 25)`;
+        }, 150);
         setTimeout(function () {
             Reset();
-        },3000);
+        }, 1500);
     }
 }
 
@@ -80,12 +80,12 @@ function userFlash(btn) {
     btn.classList.add("userflash");
     setTimeout(function () {
         btn.classList.remove("userflash");
-    },250);
+    }, 250);
 }
 
 let allBtns = document.querySelectorAll(".btn");
-for(btn of allBtns){
-    btn.addEventListener("click",btnPress);
+for (btn of allBtns) {
+    btn.addEventListener("click", btnPress);
 }
 
 function Reset() {
@@ -93,16 +93,24 @@ function Reset() {
     gameSeq = [];
     userSeq = [];
     level = 0;
+    resetting = false; 
 }
 
-function playSeq() {
+async function playSeq() {
     playing = true;
 
     for (let i = 0; i < gameSeq.length; i++) {
-        setTimeout(function () {
-            let randBtn = document.querySelector(`.${gameSeq[i]}`);
-            btnFlash(randBtn);
-        }, i * 400); 
+        if (resetting) {
+
+            playing = false;
+            return;
+        }
+
+        let randBtn = document.querySelector(`.${gameSeq[i]}`);
+        btnFlash(randBtn);
+
+        await new Promise(resolve => setTimeout(resolve, 400));
     }
+
     playing = false;
 }
