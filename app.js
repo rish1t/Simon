@@ -39,6 +39,9 @@ function btnFlash(btn) {
 }
 
 function btnPress() {
+    if (!started){
+        return;
+    }
     let btn = this;
     userFlash(btn);
 

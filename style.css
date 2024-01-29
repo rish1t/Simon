@@ -1,10 +1,15 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Silkscreen', sans-serif;
+}
+
 body{
     text-align: center;
     background-color: rgb(25, 25, 25);
 }
 
 h1,h2,h3{
-    color: white;
+    color: #e3e6bc;
 }
 
 .btn{
