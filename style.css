@@ -54,7 +54,7 @@ h1,h2,h3{
 }
 
 .userflash{
-    background-color: aquamarine;
+    border: solid 5px #e3e6bc;
 }
 
 /* Media Query for Mobile Phones and Smaller Screens */

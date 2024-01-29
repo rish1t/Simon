@@ -5,6 +5,7 @@ let Highscore = 0;
 let btns = ["yellow","red","purple","green"];
 
 let started = false;
+let playing = false;
 let level = 0;
 
 let h2 = document.querySelector("h2");
@@ -23,12 +24,12 @@ function levelUp() {
     level++;
     h2.innerText = `Level ${level}`;
 
-    let randIdx = Math.floor(Math.random() * 3);
+    let randIdx = Math.floor(Math.random() * 4);
     let randColor = btns[randIdx];
-    let randBtn = document.querySelector(`.${randColor}`);
     gameSeq.push(randColor);
     console.log(gameSeq);
-    btnFlash(randBtn);
+
+    playSeq();
 }
 
 function btnFlash(btn) {
@@ -39,7 +40,7 @@ function btnFlash(btn) {
 }
 
 function btnPress() {
-    if (!started){
+    if (!started || playing == true){
         return;
     }
     let btn = this;
@@ -92,4 +93,16 @@ function Reset() {
     gameSeq = [];
     userSeq = [];
     level = 0;
+}
+
+function playSeq() {
+    playing = true;
+
+    for (let i = 0; i < gameSeq.length; i++) {
+        setTimeout(function () {
+            let randBtn = document.querySelector(`.${gameSeq[i]}`);
+            btnFlash(randBtn);
+        }, i * 400); 
+    }
+    playing = false;
 }
